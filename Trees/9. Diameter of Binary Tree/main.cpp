@@ -22,44 +22,28 @@ int diameterOfTree1(Node *root)
     {
         return 0;
     }
-    int leftHeight = heightOfTree(root->left);
-    int rightHeight = heightOfTree(root->right);
-    int diameter = 1 + leftHeight + rightHeight;
-    return max(diameter, max(leftHeight, rightHeight));
+    int maxDia = INT32_MIN;
+    int nodeHeight = 1 + heightOfTree(root->left) + heightOfTree(root->right);
+    diameterOfTree1(root->left);
+    diameterOfTree1(root->right);
+    if (maxDia < nodeHeight)
+    {
+        maxDia = nodeHeight;
+    }
+    return maxDia;
 }
 
-vector<vector<int>> spiralTraversal(Node *root)
+int heightOfTree2(Node *root)
 {
-    queue<Node *> q;
-    vector<vector<int>> ans;
-    q.push(root);
-    int count = 0;
-    while (!q.empty())
+    int maxDia = INT32_MIN;
+    if (root == NULL)
     {
-        vector<int> temp;
-        int size = q.size();
-        while (size--)
-        {
-            Node *front = q.front();
-            q.pop();
-            if (front->left)
-            {
-                q.push(front->left);
-            }
-            if (front->right)
-            {
-                q.push(front->right);
-            }
-            temp.push_back(front->data);
-        }
-        if (count % 2 == 1)
-        {
-            reverse(temp.begin(), temp.end());
-        }
-        count++;
-        ans.push_back(temp);
+        return 0;
     }
-    return ans;
+    int leftHeight = heightOfTree2(root->left);
+    int rightHeight = heightOfTree2(root->right);
+    maxDia = max(maxDia, 1 + leftHeight + rightHeight);
+    return 1 + max(leftHeight, rightHeight);
 }
 
 int main()
@@ -68,9 +52,12 @@ int main()
     root->left = new Node(2);
     root->right = new Node(3);
     root->left->left = new Node(4);
-    root->left->right = new Node(5);
-    root->right->right = new Node(7);
-    // cout << heightOfTree(root);
+    root->left->right = new Node(6);
+    root->left->left->left = new Node(5);
+    root->left->right->right = new Node(7);
+    root->left->right->right->left = new Node(9);
+    root->left->right->right->right = new Node(8);
+    cout << heightOfTree2(root);
     return 0;
 }
 
